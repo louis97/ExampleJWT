@@ -9,6 +9,8 @@ HandlerGenerator = new HandlerGenerator();
 /* GET home page. */
 router.get('/', middleware.checkToken, HandlerGenerator.index);
 
+router.post('/signin', middleware.checkToken, HandlerGenerator.signin);
+
 router.post( '/login', HandlerGenerator.login);
 
 module.exports = router;
