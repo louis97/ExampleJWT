@@ -11,6 +11,10 @@ router.get('/', middleware.checkToken, HandlerGenerator.index);
 
 router.post('/signin', middleware.checkToken, HandlerGenerator.signin);
 
+router.post('/delete', middleware.checkToken, HandlerGenerator.delete);
+
+router.put('/update', middleware.checkToken, HandlerGenerator.update);
+
 router.post( '/login', HandlerGenerator.login);
 
 module.exports = router;

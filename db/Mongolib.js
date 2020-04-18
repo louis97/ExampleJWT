@@ -33,16 +33,47 @@ const findDocumentByUsername = function (name, db, callback) {
         callback(docs);
     });
 }
-
-const addDocument = function(db, req,res){
+//solo se añaden subscriber. El admin y el editor ya están creados. También se podría hacer con "rol": "${subscriber}" y el rol se pasa 
+//por parametro en el request.
+const addDocument = function (db, req, res) {
     var user = req.body;
-    collection.insertOne(JSON.parse(`{"username": "${user.username}", "password": "${md5(user.password)}"}`), function(err, result) { 
-        assert.equal(err, null); 
-        res(result); 
+    const collection = db.collection('usuarios');
+    collection.insertOne(JSON.parse(`{"username": "${user.username}", "password": "${md5(user.password)}","rol": "subscriber"}`), function (err, result) {
+        assert.equal(err, null);
+        res(result);
     });
+}
+
+const deleteDocument = function (db, req, res) {
+    var user = req.body;
+    const collection = db.collection('usuarios');
+    collection.remove({ "username": user.username }, true, function (err, result) {
+        assert.equal(err, null);
+        res(result);
+    });
+}
+
+const updateDocument = function (db, req, res) {
+    var user = req.body;
+    const collection = db.collection('usuarios');
+    collection.update(
+        { username: user.username },
+        {
+            $set: {
+                password: user.password
+            }
+        },
+        {
+            multi: false
+        }, function (err, result) {
+            assert.equal(err, null);
+            res(result);
+        });
 }
 
 exports.getDatabase = getDatabase;
 exports.findDocuments = findDocuments;
 exports.findDocumentByUsername = findDocumentByUsername;
 exports.addDocument = addDocument;
+exports.deleteDocument = deleteDocument;
+exports.updateDocument = updateDocument;
